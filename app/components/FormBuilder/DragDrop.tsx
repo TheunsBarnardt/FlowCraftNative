@@ -5,7 +5,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useFormBuilder } from './FormBuilderContext';
 
 const DragDrop = () => {
-  const { formState, setFields } = useFormBuilder();
+  const { formState, setBlocks } = useFormBuilder();
 
   // Render each item in the list
   const renderItem = ({ item, drag, isActive }: any) => (
@@ -21,7 +21,7 @@ const DragDrop = () => {
   // Handle the end of the drag event
   const handleDragEnd = ({ data }: any) => {
     console.log('Drag Ended - New Data: ', data); // Log the new order
-    setFields(data); // Update state with the new order
+    setBlocks(data); // Update state with the new order
   };
 
   return (

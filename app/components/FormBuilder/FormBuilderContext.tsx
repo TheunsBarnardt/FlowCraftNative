@@ -1,19 +1,22 @@
 import React, { createContext, useContext, useState } from 'react';
 
-interface FormField {
+
+export type FormField = {
+
   id: string;
-  type: string;
+  type: "accordion" | "alert" | "alert-dialog"| "avatar"| "alert"| "badge"| "button"| "card"| "input"| "select";
   label: string;
-  value: string | boolean | string[];
+  value: any;
   options?: string[];
-}
+};
+
 
 interface FormBuilderContextProps {
   formState: {
     fields: FormField[];
   };
-  addField: (field: FormField) => void;
-  setFields: (fields: any[]) => void;
+  addBlock: (field: FormField) => void;
+  setBlocks: (fields: any[]) => void;
 }
 
 const FormBuilderContext = createContext<FormBuilderContextProps | undefined>(undefined);
@@ -28,14 +31,14 @@ export const useFormBuilder = (): FormBuilderContextProps => {
 };
 
 const FormBuilderProvider = ({ children }: { children: React.ReactNode }) => {
-  const [fields, setFields] = useState<FormField[]>([]);
+  const [fields, setBlocks] = useState<FormField[]>([]);
 
-  const addField = (field: FormField) => {
-    setFields((prevFields) => [...prevFields, field]);
+  const addBlock = (field: FormField) => {
+    setBlocks((prevFields) => [...prevFields, field]);
   };
 
   return (
-    <FormBuilderContext.Provider value={{ formState: { fields }, addField, setFields }}>
+    <FormBuilderContext.Provider value={{ formState: { fields }, addBlock, setBlocks }}>
       {children}
     </FormBuilderContext.Provider>
   );

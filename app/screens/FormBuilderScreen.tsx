@@ -12,18 +12,18 @@ interface FormBuilderScreenProps {
 }
 
 const FormBuilderScreen: React.FC<FormBuilderScreenProps> = ({ navigation }) => {
-  const { addField } = useFormBuilder();
+  const { addBlock } = useFormBuilder();
 
   const addInputField = () => {
-    addField({
+    addBlock({
       id: 'input-1',
-      type: 'input',
+      type: 'accordion',
       label: 'Text Input',
       value: '',
     });
-    addField({
+    addBlock({
       id: 'select-1',
-      type: 'card',
+      type: 'select',
       label: 'Select Input',
       value: '',
     });
