@@ -17,6 +17,7 @@ interface FormBuilderContextProps {
   };
   addBlock: (field: FormField) => void;
   setBlocks: (fields: any[]) => void;
+  removeBlock: (id: string) => void;
 }
 
 const FormBuilderContext = createContext<FormBuilderContextProps | undefined>(undefined);
@@ -37,8 +38,12 @@ const FormBuilderProvider = ({ children }: { children: React.ReactNode }) => {
     setBlocks((prevFields) => [...prevFields, field]);
   };
 
+  const removeBlock = (id: string) => {
+    setBlocks((prev) => prev.filter((field) => field.id !== id));
+  };
+
   return (
-    <FormBuilderContext.Provider value={{ formState: { fields }, addBlock, setBlocks }}>
+    <FormBuilderContext.Provider value={{ formState: { fields }, addBlock, setBlocks, removeBlock }}>
       {children}
     </FormBuilderContext.Provider>
   );
