@@ -73,13 +73,14 @@ const FormBuilderScreen: React.FC = () => {
       {/* Main Content */}
       <View style={{ flex: 1, flexDirection: 'row', padding: 16 }}>
         {/* Form Preview */}
+        <ScrollView>
         <View style={{ flex: 1, marginRight: 16 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>Form Preview</Text>
           <Form setSelectedBlockId={setSelectedBlockId} />
         </View>
-
+</ScrollView>
         {/* Property Grid */}
-        <View style={{ width: '35%', padding: 16, backgroundColor: '#f1f3f5', borderRadius: 8 }}>
+        <View style={{ width: '20%', padding: 16, backgroundColor: '#f1f3f5', borderRadius: 8 }}>
           <PropertyGrid selectedBlockId={selectedBlockId} />
         </View>
       </View>
