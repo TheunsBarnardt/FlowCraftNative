@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from 'react';
 export type FormField = {
 
   id: string;
-  type: "accordion" | "alert" | "alert-dialog"| "avatar"| "alert"| "badge"| "button"| "card"| "input"| "select";
+  type: "accordion" | "alert" | "alert-dialog"| "avatar"| "alert"| "badge"| "button"| "card"| "input"| "select" | "vstack" | "hstack";
   label: string;
   value: any;
   options?: string[];
