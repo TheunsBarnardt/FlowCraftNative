@@ -5,6 +5,7 @@ import { useFormBuilder } from '../components/FormBuilder/FormBuilderContext';
 import Form from '../components/FormBuilder/Form';
 import * as Icons from 'lucide-react-native';
 import PropertyGrid from '../components/FormBuilder/PropertyGrid';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 
 // Define available field types with icons
@@ -23,6 +24,7 @@ const fieldTypes: { type: 'accordion' | 'alert' | 'alert-dialog' | 'avatar' | 'b
 const FormBuilderScreen: React.FC = () => {
   const { addBlock } = useFormBuilder();
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [tab, setTab] = React.useState('account');
 
   const handleAddBlock = (type: 'accordion' | 'alert' | 'alert-dialog' | 'avatar' | 'badge' | 'button' | 'card' | 'input' | 'select') => {
     const newBlock = {
@@ -38,9 +40,24 @@ const FormBuilderScreen: React.FC = () => {
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
       {/* Side Navigation */}
-      <View
+
+      <Tabs
+        value={tab}
+        onValueChange={setTab}
+        className='w-full max-w-[10%] mx-auto flex-col gap-1.5'
+      >
+        <TabsList className='flex-row w-full'>
+          <TabsTrigger value='components' className='flex-1'>
+            <Text>Components</Text>
+          </TabsTrigger>
+          <TabsTrigger value='password' className='flex-1'>
+            <Text>Password</Text>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value='components'>
+        <View
         style={{
-          width: '10%',
+        
           backgroundColor: '#f8f9fa',
           borderRightWidth: 1,
           borderRightColor: '#dee2e6',
@@ -69,6 +86,13 @@ const FormBuilderScreen: React.FC = () => {
           ))}
         </ScrollView>
       </View>
+        </TabsContent>
+        <TabsContent value='password'>
+        
+        </TabsContent>
+      </Tabs>
+
+    
 
       {/* Main Content */}
       <View style={{ flex: 1, flexDirection: 'row', padding: 16 }}>
