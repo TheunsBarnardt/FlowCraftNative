@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Dimensions, PanResponder, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { useFormBuilder } from "./FormBuilderContext";
 import FieldRenderer from "./FieldRenderer";
 import { Text } from "../ui/text";
 import { Ionicons } from "@expo/vector-icons";
 
-const GRID_COLUMNS = 6;
-const GRID_MARGIN = 8;
+// Define the grid layout constants
+const GRID_COLUMNS = 6; // Number of columns for the grid
+const GRID_MARGIN = 8; // Margin between grid items
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const CELL_WIDTH = (SCREEN_WIDTH - (GRID_COLUMNS + 1) * GRID_MARGIN) / GRID_COLUMNS;
+const CELL_WIDTH = (SCREEN_WIDTH - (GRID_COLUMNS + 1) * GRID_MARGIN) / GRID_COLUMNS; // Calculate cell width based on screen size
 
 interface FormProps {
   setSelectedBlockId: (id: string | null) => void;
@@ -26,8 +27,8 @@ const Form: React.FC<FormProps> = ({ setSelectedBlockId }) => {
   };
 
   const handleSelectBlock = (id: string) => {
-    console.log(`Selected block ID: ${id}`); // Debugging log
-    setSelectedBlockId(id); // Update selected block ID
+    console.log(`Selected block ID: ${id}`);
+    setSelectedBlockId(id); // Update the selected block for property grid
   };
 
   const renderItem = ({
@@ -39,31 +40,23 @@ const Form: React.FC<FormProps> = ({ setSelectedBlockId }) => {
     drag: () => void;
     isActive: boolean;
   }) => {
-    // PanResponder to handle dragging logic
-    const panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (e, gestureState) => {
-        if (draggedItemId === item.id && isActive) {
-          setIsDragging(true);
-        }
-      },
-      onPanResponderRelease: () => {
-        setDraggedItemId(null); // Stop dragging
-        setIsDragging(false); // End dragging state
-      },
-    });
+    // Calculate grid position based on index
+    const gridPosition = Math.floor(item.index % GRID_COLUMNS); // Ensure it stays within the grid width
+    const gridWidth = (SCREEN_WIDTH - (GRID_COLUMNS + 1) * GRID_MARGIN) / GRID_COLUMNS;
 
     return (
       <View
-        style={[styles.gridItem, isActive ? styles.activeDragItem : {}, { width: CELL_WIDTH, height: CELL_WIDTH }]}
-        {...panResponder.panHandlers}
+        style={[
+          styles.gridItem,
+          isActive ? styles.activeDragItem : {},
+          { width: gridWidth, marginLeft: gridPosition * (GRID_MARGIN + gridWidth) }, // Align to grid
+        ]}
       >
         <TouchableOpacity
           style={styles.gridItemContent}
           onPress={() => {
-            // Only trigger selection if it's not a drag and press is finalized
             if (!isDragging && !pressing) {
-              console.log(`Block ${item.id} tapped, updating PropertyGrid.`); // Debugging log
+              console.log(`Block ${item.id} tapped, updating PropertyGrid.`);
               handleSelectBlock(item.id); // Set selected block
             }
           }}
@@ -78,30 +71,27 @@ const Form: React.FC<FormProps> = ({ setSelectedBlockId }) => {
             style={styles.removeButton}
             onPress={() => removeBlock(item.id)}
           >
-            <Ionicons name="close-circle" size={24} color="black" />
+            <Ionicons name="close-circle" size={16} color="black" />
           </TouchableOpacity>
 
-          {/* Add Property Grid Update Icon */}
-          <TouchableOpacity
-            style={styles.propertyGridButton}
-            onPress={() => {
-              console.log(`Block ${item.id} clicked, Property Grid updated.`);
-              handleSelectBlock(item.id); // Trigger property grid update by selecting the block
-            }}
-          >
-            <Ionicons name="settings" size={24} color="black" />
-          </TouchableOpacity>
-
-          {/* Drag Button */}
+          {/* Drag icon */}
           <TouchableOpacity
             style={styles.dragButton}
             onPressIn={() => {
               drag(); // Start dragging
               setDraggedItemId(item.id); // Set dragged item ID
-              setIsDragging(false); // Make sure dragging flag is reset
+              setIsDragging(false); // Reset dragging flag
             }}
           >
-            <Ionicons name="menu" size={24} color="black" />
+            <Ionicons name="menu" size={16} color="black" />
+          </TouchableOpacity>
+
+          {/* Property Grid update icon */}
+          <TouchableOpacity
+            style={styles.propertyGridButton}
+            onPress={() => handleSelectBlock(item.id)} // Select block to update property grid
+          >
+            <Ionicons name="settings" size={16} color="black" />
           </TouchableOpacity>
         </TouchableOpacity>
 
@@ -151,9 +141,10 @@ const styles = StyleSheet.create({
     borderColor: "#dee2e6",
     borderRadius: 8,
     padding: 8,
+    paddingTop: 40,
     backgroundColor: "#f8f9fa",
     justifyContent: "space-between",
-    position: "relative", // Allow positioning of remove button, drag, and settings icon
+    position: "relative", // Allow positioning of remove button, drag icon, and property grid icon
   },
   activeDragItem: {
     opacity: 0.7,
@@ -169,7 +160,7 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     position: "absolute",
-    top: 8,
+    top: -32,
     right: 8,
     backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent background
     borderRadius: 50, // Circular button
@@ -177,16 +168,16 @@ const styles = StyleSheet.create({
   },
   dragButton: {
     position: "absolute",
-    top: 8,
-    left: 8,
+    top: -32,
+    right: 35,
     backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent background
     borderRadius: 50, // Circular button
     padding: 4,
   },
   propertyGridButton: {
     position: "absolute",
-    top: 8,
-    right: 40, // Slightly to the left of the remove button
+    top: -32,
+    right: 62,
     backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent background
     borderRadius: 50, // Circular button
     padding: 4,
