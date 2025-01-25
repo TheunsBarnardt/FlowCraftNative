@@ -1,9 +1,10 @@
 // app/screens/FormBuilderScreen.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useFormBuilder } from '../components/FormBuilder/FormBuilderContext';
 import Form from '../components/FormBuilder/Form';
 import * as Icons from 'lucide-react-native';
+import PropertyGrid from '../components/FormBuilder/PropertyGrid';
 
 
 // Define available field types with icons
@@ -21,6 +22,7 @@ const fieldTypes: { type: 'accordion' | 'alert' | 'alert-dialog' | 'avatar' | 'b
 
 const FormBuilderScreen: React.FC = () => {
   const { addBlock } = useFormBuilder();
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   const handleAddBlock = (type: 'accordion' | 'alert' | 'alert-dialog' | 'avatar' | 'badge' | 'button' | 'card' | 'input' | 'select') => {
     const newBlock = {
@@ -68,10 +70,18 @@ const FormBuilderScreen: React.FC = () => {
         </ScrollView>
       </View>
 
-      {/* Main Container */}
-      <View style={{ flex: 1, padding: 16 }}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>Form Preview</Text>
-        <Form />
+      {/* Main Content */}
+      <View style={{ flex: 1, flexDirection: 'row', padding: 16 }}>
+        {/* Form Preview */}
+        <View style={{ flex: 1, marginRight: 16 }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>Form Preview</Text>
+          <Form setSelectedBlockId={setSelectedBlockId} />
+        </View>
+
+        {/* Property Grid */}
+        <View style={{ width: '35%', padding: 16, backgroundColor: '#f1f3f5', borderRadius: 8 }}>
+          <PropertyGrid selectedBlockId={selectedBlockId} />
+        </View>
       </View>
     </View>
   );
